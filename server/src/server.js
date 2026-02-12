@@ -5,19 +5,21 @@ import http from "http";
 import { Server } from "socket.io";
 
 dotenv.config();
+
+// Connect DB
 connectDB();
 
 const PORT = process.env.PORT || 5000;
 
-// 🔥 HTTP server
+// Create HTTP server
 const server = http.createServer(app);
 
-// 🔥 SOCKET.IO
+// Socket.io setup
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:5173", // for local dev
-      "client-service-production-f8cf.up.railway.app", // production frontend URL on Railway
+      "http://localhost:5173",
+      process.env.CLIENT_URL, // production frontend URL
     ],
     credentials: true,
   },
@@ -26,7 +28,6 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);
 
-  // Join user-specific room for notifications
   socket.on("joinUserRoom", (userId) => {
     socket.join(`user_${userId}`);
     console.log(`✅ User ${userId} joined notification room`);
@@ -41,13 +42,10 @@ io.on("connection", (socket) => {
   });
 });
 
-// 🔥 ATTACH io to app for use in controllers
+// Attach io to app
 app.set("io", io);
 
-// 🔥 EXPORT io
-export { io };
-
-// ❌ app.listen mat use karo
-server.listen(PORT, () => {
+// Start server
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
