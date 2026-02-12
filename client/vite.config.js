@@ -8,7 +8,7 @@ export default defineConfig({
     host: "0.0.0.0",
     port: process.env.PORT || 4173,
     allowedHosts: [
-      "patient-manifestation-production.up.railway.app",
+      "apna-service.up.railway.app",
     ],
   },
 });
