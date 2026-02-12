@@ -5,8 +5,6 @@ import http from "http";
 import { Server } from "socket.io";
 
 dotenv.config();
-
-// Connect database
 connectDB();
 
 const PORT = process.env.PORT || 5000;
@@ -14,12 +12,12 @@ const PORT = process.env.PORT || 5000;
 // Create HTTP server
 const server = http.createServer(app);
 
-// Setup Socket.io
+// Create socket.io instance
 const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173",
-      process.env.CLIENT_URL, // production frontend
+      process.env.CLIENT_URL,
     ],
     credentials: true,
   },
@@ -42,8 +40,11 @@ io.on("connection", (socket) => {
   });
 });
 
-// Attach io
+// Attach io to app
 app.set("io", io);
+
+// 🔥 Export io so controllers can use it
+export { io };
 
 // Start server
 server.listen(PORT, "0.0.0.0", () => {
