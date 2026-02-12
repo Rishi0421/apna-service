@@ -15,7 +15,10 @@ const server = http.createServer(app);
 // 🔥 SOCKET.IO
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173", // for local dev
+      "client-service-production-f8cf.up.railway.app", // production frontend URL on Railway
+    ],
     credentials: true,
   },
 });
